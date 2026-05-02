@@ -60,7 +60,7 @@ export function ReservationModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-slate-950/40 sm:items-center sm:justify-center">
-      <div className="w-full rounded-t-3xl bg-white p-5 shadow-xl sm:max-w-sm sm:rounded-3xl">
+      <div className="max-h-[90vh] w-full overflow-y-auto rounded-t-3xl bg-white p-5 shadow-xl sm:max-w-sm sm:rounded-3xl">
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">
@@ -91,6 +91,15 @@ export function ReservationModal({
                 <p>인수 사유: {reservation.takeover_reason}</p>
               </div>
             ) : null}
+
+            <button
+              type="button"
+              disabled={isSaving}
+              onClick={onCancel}
+              className="mt-3 w-full rounded-2xl border border-red-200 bg-white px-4 py-3 text-base font-medium text-red-600 transition disabled:opacity-50"
+            >
+              예약 취소
+            </button>
           </div>
         ) : null}
 
@@ -140,16 +149,6 @@ export function ReservationModal({
             {isSaving ? "저장 중..." : isTakeover ? "인수 저장" : "예약 저장"}
           </button>
 
-          {isTakeover ? (
-            <button
-              type="button"
-              disabled={isSaving}
-              onClick={onCancel}
-              className="w-full rounded-2xl border border-red-200 bg-white px-4 py-3 text-base font-medium text-red-600 transition disabled:opacity-50"
-            >
-              예약 취소
-            </button>
-          ) : null}
         </form>
       </div>
     </div>
