@@ -13,6 +13,7 @@ type ReservationModalProps = {
   errorMessage: string;
   onClose: () => void;
   onSave: (reservedBy: string, takeoverReason?: string) => Promise<void>;
+  onCancel: () => Promise<void>;
 };
 
 export function ReservationModal({
@@ -22,7 +23,8 @@ export function ReservationModal({
   isSaving,
   errorMessage,
   onClose,
-  onSave
+  onSave,
+  onCancel
 }: ReservationModalProps) {
   const [selectedMember, setSelectedMember] = useState<string>(FAMILY_MEMBERS[0]);
   const [takeoverReason, setTakeoverReason] = useState("");
@@ -137,6 +139,17 @@ export function ReservationModal({
           >
             {isSaving ? "저장 중..." : isTakeover ? "인수 저장" : "예약 저장"}
           </button>
+
+          {isTakeover ? (
+            <button
+              type="button"
+              disabled={isSaving}
+              onClick={onCancel}
+              className="w-full rounded-2xl border border-red-200 bg-white px-4 py-3 text-base font-medium text-red-600 transition disabled:opacity-50"
+            >
+              예약 취소
+            </button>
+          ) : null}
         </form>
       </div>
     </div>

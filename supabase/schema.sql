@@ -30,11 +30,12 @@ execute function public.set_updated_at();
 alter table public.car_reservations enable row level security;
 
 grant usage on schema public to anon;
-grant select, insert, update on public.car_reservations to anon;
+grant select, insert, update, delete on public.car_reservations to anon;
 
 drop policy if exists "Allow public read reservations" on public.car_reservations;
 drop policy if exists "Allow public create reservations" on public.car_reservations;
 drop policy if exists "Allow public update reservations" on public.car_reservations;
+drop policy if exists "Allow public delete reservations" on public.car_reservations;
 
 create policy "Allow public read reservations"
 on public.car_reservations
@@ -54,5 +55,11 @@ for update
 to anon
 using (true)
 with check (true);
+
+create policy "Allow public delete reservations"
+on public.car_reservations
+for delete
+to anon
+using (true);
 
 notify pgrst, 'reload schema';

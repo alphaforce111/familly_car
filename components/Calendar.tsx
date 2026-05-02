@@ -198,6 +198,43 @@ export function Calendar() {
     }
   };
 
+  const handleCancel = async () => {
+    if (!selectedDate || !reservations[selectedDate]) {
+      return;
+    }
+
+    setIsSaving(true);
+    setErrorMessage("");
+
+    try {
+      const supabase = getSupabaseClient();
+      const { error } = await supabase
+        .from("car_reservations")
+        .delete()
+        .eq("reservation_date", selectedDate);
+
+      if (error) {
+        console.error("Failed to cancel reservation:", error);
+        setErrorMessage(getFriendlySupabaseError(error));
+        return;
+      }
+
+      setReservations((previous) => {
+        const nextReservations = { ...previous };
+        delete nextReservations[selectedDate];
+        return nextReservations;
+      });
+      setSelectedDate(null);
+    } catch (error) {
+      console.error("Failed to cancel reservation:", error);
+      setErrorMessage(
+        error instanceof Error ? error.message : "예약 취소에 실패했습니다."
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <>
       <section className="rounded-3xl bg-white p-4 shadow-sm">
@@ -289,6 +326,7 @@ export function Calendar() {
           setErrorMessage("");
         }}
         onSave={handleSave}
+        onCancel={handleCancel}
       />
     </>
   );
